@@ -15,7 +15,7 @@ class UserService {
             const user = await this.userRepository.create(data);
             return user;
         } catch (error) {
-            if(error.name == 'SequelizeValidationError') {
+            if (error.name == 'SequelizeValidationError') {
                 throw error;
             }
             console.log("Something went wrong in the service layer");
@@ -30,12 +30,12 @@ class UserService {
             // step 2-> compare incoming plain password with stores encrypted password
             const passwordsMatch = this.checkPassword(plainPassword, user.password);
 
-            if(!passwordsMatch) {
+            if (!passwordsMatch) {
                 console.log("Password doesn't match");
-                throw {error: 'Incorrect password'};
+                throw { error: 'Incorrect password' };
             }
             // step 3-> if passwords match then create a token and send it to the user
-            const newJWT = this.createToken({email: user.email, id: user.id});
+            const newJWT = this.createToken({ email: user.email, id: user.id });
             return newJWT;
         } catch (error) {
             console.log("Something went wrong in the sign in process");
@@ -46,12 +46,12 @@ class UserService {
     async isAuthenticated(token) {
         try {
             const response = this.verifyToken(token);
-            if(!response) {
-                throw {error: 'Invalid token'}
+            if (!response) {
+                throw { error: 'Invalid token' }
             }
             const user = await this.userRepository.getById(response.id);
-            if(!user) {
-                throw {error: 'No user with the corresponding token exists'};
+            if (!user) {
+                throw { error: 'No user with the corresponding token exists' };
             }
             return user.id;
         } catch (error) {
@@ -62,7 +62,7 @@ class UserService {
 
     createToken(user) {
         try {
-            const result = jwt.sign(user, JWT_KEY, {expiresIn: '1d'});
+            const result = jwt.sign(user, JWT_KEY, { expiresIn: '1d' });
             return result;
         } catch (error) {
             console.log("Something went wrong in token creation");
@@ -91,7 +91,17 @@ class UserService {
 
     isAdmin(userId) {
         try {
+            console.log("In service")
             return this.userRepository.isAdmin(userId);
+        } catch (error) {
+            console.log("Something went wrong in service layer");
+            throw error;
+        }
+    }
+    getUser(userId) {
+        try {
+
+            return this.userRepository.getUser(userId);
         } catch (error) {
             console.log("Something went wrong in service layer");
             throw error;

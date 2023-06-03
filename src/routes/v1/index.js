@@ -1,12 +1,12 @@
 const express = require('express');
 
 const UserController = require('../../controllers/user-controller');
-const {AuthRequestValidators} = require('../../middlewares/index');
+const { AuthRequestValidators } = require('../../middlewares/index');
 
 const router = express.Router();
 
 router.post(
-    '/signup', 
+    '/signup',
     AuthRequestValidators.validateUserAuth,
     UserController.create
 );
@@ -25,6 +25,12 @@ router.get(
     '/isAdmin',
     AuthRequestValidators.validateIsAdminRequest,
     UserController.isAdmin
+);
+
+router.get(
+    '/getUser/:id',
+
+    UserController.getUser
 );
 
 module.exports = router;

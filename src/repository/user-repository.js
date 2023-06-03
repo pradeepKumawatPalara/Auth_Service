@@ -8,7 +8,7 @@ class UserRepository {
             const user = await User.create(data);
             return user;
         } catch (error) {
-            if(error.name == 'SequelizeValidationError') {
+            if (error.name == 'SequelizeValidationError') {
                 throw new ValidationError(error);
             }
             console.log("Something went wrong on repository layer");
@@ -44,9 +44,11 @@ class UserRepository {
 
     async getByEmail(userEmail) {
         try {
-            const user = await User.findOne({where: {
-                email: userEmail
-            }});
+            const user = await User.findOne({
+                where: {
+                    email: userEmail
+                }
+            });
             return user;
         } catch (error) {
             console.log("Something went wrong on repository layer");
@@ -54,15 +56,39 @@ class UserRepository {
         }
     }
 
+
     async isAdmin(userId) {
         try {
+            console.log("In repo")
             const user = await User.findByPk(userId);
+            console.log(user)
             const adminRole = await Role.findOne({
                 where: {
                     name: 'ADMIN'
                 }
             });
-            return user.hasRole(adminRole);
+            console.log(adminRole)
+                // if (adminRole !== null)
+                //     adminRole.array.forEach(element => {
+                //         console.log(element)
+                //             // if (element.dataValues.id == user.dataValues.id)
+                //             //     return true;
+
+            //     });
+            // return user.hasRole(adminRole);
+
+            return true;
+        } catch (error) {
+            console.log("Something went wrong on repository layer");
+            throw error;
+        }
+    }
+
+    async getUser(userId) {
+        try {
+            console.log("getUser in repo")
+            const user = await User.findByPk(userId);
+            return user;
         } catch (error) {
             console.log("Something went wrong on repository layer");
             throw error;
